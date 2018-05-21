@@ -39,7 +39,9 @@ public class MoviePosterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        moviePosterView = (GridView) findViewById(R.id.movie_posters_view);
+        moviePosterView = findViewById(R.id.movie_posters_view);
+        progressBar = findViewById(R.id.progressBar);
+        showMovies(MovieFilter.POPULAR);
         moviePosterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -51,10 +53,9 @@ public class MoviePosterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
