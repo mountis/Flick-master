@@ -1,14 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><!--suppress ALL, AndroidDomInspection -->
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <style name="MovieView" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@android:color/holo_purple</item>
+        <item name="colorPrimaryDark">@color/primary_material_dark_1</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
     </style>
 
 </resources>

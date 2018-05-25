@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 
 import comflick.myportfolio.mountis.flick.App;
 import comflick.myportfolio.mountis.flick.R;
-import comflick.myportfolio.mountis.flick.model.MovieListResponse;
+import comflick.myportfolio.mountis.flick.model.MovieListResults;
 import comflick.myportfolio.mountis.flick.util.MovieFilter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -20,6 +20,7 @@ public class MovieClient {
     private MovieService movieService;
     private String apiKey;
 
+    //    network call to convert JSON using GSON
     private MovieClient() {
         final Gson gson =
                 new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
@@ -38,7 +39,8 @@ public class MovieClient {
         return instance;
     }
 
-    public Observable<MovieListResponse> getMovies(@MovieFilter.movieFilter int movieFilter) {
+    //    network call to get get movies from observable
+    public Observable<MovieListResults> getMovies(@MovieFilter.movieFilter int movieFilter) {
         if(movieFilter == MovieFilter.HIGH_RATED){
 
             return movieService.getHighRatedMovies(apiKey);

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
 
-    <color name="white">#FFF</color>
+    <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <!--<color name="dark_blue2">#1B2737</color>-->
     <color name="grey">#4c4c4c</color>
-    <!--<color name="maroon_blue">#0cd7de</color>-->
     <color name="light_grey">#d0d0d0</color>
+    <color name="colorPrimaryDark">#6f099a</color>
+    <color name="colorPrimary">#9c27b0</color>
+    <color name="colorAccent">#ffc400</color>
+    <color name="primary_material_dark_1">#9c27b0</color>
+    <color name="primary_dark_material_dark">#651189</color>
+    <color name="accent_material_light">#faa701</color>
 </resources>

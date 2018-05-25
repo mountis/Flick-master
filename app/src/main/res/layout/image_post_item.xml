@@ -7,29 +7,7 @@
         android:id="@+id/poster_item_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:contentDescription="Movie poster"
         android:scaleType="fitXY" />
-
-    <TextView
-        android:id="@+id/movie_title_TV"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:maxLines="2"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="25sp" />
-
-    <TextView
-        android:id="@+id/vote_average"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:maxLines="2"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        />
 
 </FrameLayout>

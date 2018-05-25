@@ -10,7 +10,7 @@
         android:columnWidth="120dp"
         android:gravity="center"
         android:horizontalSpacing="4dp"
-        android:numColumns="2"
+        android:numColumns="3"
         android:stretchMode="columnWidth"
         android:verticalSpacing="4dp">
 
@@ -22,4 +22,5 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:layout_gravity="center" />
+
 </FrameLayout>

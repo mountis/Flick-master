@@ -1,6 +1,5 @@
 package comflick.myportfolio.mountis.flick.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,7 @@ import java.util.List;
 import comflick.myportfolio.mountis.flick.R;
 import comflick.myportfolio.mountis.flick.adapters.MovieAdapter;
 import comflick.myportfolio.mountis.flick.model.Movie;
-import comflick.myportfolio.mountis.flick.model.MovieListResponse;
+import comflick.myportfolio.mountis.flick.model.MovieListResults;
 import comflick.myportfolio.mountis.flick.network.MovieClient;
 import comflick.myportfolio.mountis.flick.util.MovieFilter;
 import rx.Observer;
@@ -25,44 +24,49 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MoviePosterActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private GridView moviePosterView;
+    private GridView gridView;
     private List<Movie> movies;
     private ProgressBar progressBar;
     private Subscription subscription;
     private MovieAdapter movieAdapter;
-    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        moviePosterView = findViewById(R.id.movie_posters_view);
+//    Initialize GridView and progress Bar
+        gridView = findViewById(R.id.movie_posters_view);
         progressBar = findViewById(R.id.progressBar);
+
+//        Show movies retrieved from MovieDb
         showMovies(MovieFilter.POPULAR);
-        moviePosterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+//        Setup onclicklistener for when a movie item is clicked to send us to the detail activity
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie selectedMovie = movies.get(position);
-
-                Intent intent = new Intent(MoviePosterActivity.this, MovieDetailActivity.class);
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                 intent.putExtra(getString(R.string.movie_intent_key), selectedMovie);
-
                 startActivity(intent);
             }
         });
 
 
     }
+
+    //    Inflate the settings menu to show on the Action Bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_poster_menu, menu);
+        inflater.inflate(R.menu.settings, menu);
         return true;
     }
 
+    // Setup the sorting axctivity when we choose to view movies by popular or highest rated
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -77,9 +81,10 @@ public class MoviePosterActivity extends AppCompatActivity {
         }
     }
 
+    //    Populate the gridview with the movies retrieved
     public void showMovies() {
         movieAdapter = new MovieAdapter(this, movies);
-        moviePosterView.setAdapter(movieAdapter);
+        gridView.setAdapter(movieAdapter);
     }
 
     private void showMovies(@MovieFilter.movieFilter int filter) {
@@ -88,7 +93,7 @@ public class MoviePosterActivity extends AppCompatActivity {
                 .getMovies(filter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<MovieListResponse>() {
+                .subscribe(new Observer<MovieListResults>() {
                     @Override
                     public void onCompleted() {
                         progressBar.setVisibility(View.GONE);
@@ -100,8 +105,8 @@ public class MoviePosterActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(MovieListResponse movieListResponse) {
-                        movies = movieListResponse.getMovies();
+                    public void onNext(MovieListResults movieListResults) {
+                        movies = movieListResults.getMovies();
                         showMovies();
                     }
                 });

@@ -15,7 +15,6 @@ import comflick.myportfolio.mountis.flick.R;
 import comflick.myportfolio.mountis.flick.model.Movie;
 
 
-
 public class MovieAdapter extends BaseAdapter {
 
     private final LayoutInflater mLayoutInflater;
@@ -23,11 +22,12 @@ public class MovieAdapter extends BaseAdapter {
     Context context;
 
 
-    public MovieAdapter(Context context, List<Movie> movies){
+    public MovieAdapter(Context context, List<Movie> movies) {
         this.movies = movies;
-        this.context= context;
+        this.context = context;
         mLayoutInflater = LayoutInflater.from(context);
     }
+
     @Override
     public int getCount() {
         return movies.size();
@@ -55,13 +55,14 @@ public class MovieAdapter extends BaseAdapter {
         }
 
         Movie movie = (Movie) getItem(position);
-        ImageView imageView = (ImageView)gridView.findViewById(R.id.poster_item_view);
-        Picasso.with(context).load(context.getString(R.string.movie_image_base_url)+movie.getPosterPath()).into(imageView);
+        ImageView imageView = gridView.findViewById(R.id.poster_item_view);
+        Picasso.with(context)
+                .load(context.getString(R.string.movie_image_base_url) + movie.getPosterPath()).into(imageView);
 
         return gridView;
     }
 
-    public void update(List<Movie> movies){
+    public void update(List<Movie> movies) {
         this.movies.clear();
         this.movies.addAll(movies);
         notifyDataSetChanged();

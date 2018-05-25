@@ -3,10 +3,14 @@
     <string name="movie_intent_key">movie</string>
     <string name="movie_poster_data_key">movies.key</string>
     <string name="base_url">http://api.themoviedb.org/3/</string>
-
     <string name="api_key">46aed17b77e38079aaaf32da2ff1491b</string>
     <string name="movie_image_base_url">http://image.tmdb.org/t/p/w185/</string>
     <string name="sort_by_most_popular">Popular movies</string>
     <string name="sort_by_highest_rated">Top-Rated movies</string>
     <string name="overview_data_key">overview.key</string>
+
+
+    <string name="user_rating">Movie Rating:</string>
+    <string name="plot_synopsis">Description:</string>
+    <string name="movie_release_date">Release Date:</string>
 </resources>

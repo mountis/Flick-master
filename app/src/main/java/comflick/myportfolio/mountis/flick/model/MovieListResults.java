@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-
-public class MovieListResponse {
+public class MovieListResults {
 
     @SerializedName("results")
     private List<Movie> movies;
