@@ -1,24 +1,27 @@
 package comflick.myportfolio.mountis.flick;
 
 import android.app.Application;
-import android.content.Context;
 
+import comflick.myportfolio.mountis.flick.network.AppModule;
+import comflick.myportfolio.mountis.flick.network.DaggerNetworkComponent;
+import comflick.myportfolio.mountis.flick.network.NetworkComponent;
+import comflick.myportfolio.mountis.flick.network.NetworkModule;
 
-public class App extends Application{
+public class App extends Application {
 
-    private static Context mContext;
-
-    public static Context getContext() {
-        return mContext;
-    }
-
-    public static void setContext(Context mContext) {
-        App.mContext = mContext;
-    }
+    private NetworkComponent networkComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        setContext(getApplicationContext());
+        networkComponent = DaggerNetworkComponent.builder()
+                .appModule( new AppModule( this ) )
+                .networkModule( new NetworkModule() )
+                .build();
     }
+
+    public NetworkComponent getNetworkComponent() {
+        return networkComponent;
+    }
+
 }

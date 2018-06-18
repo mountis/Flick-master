@@ -1,126 +1,207 @@
 package comflick.myportfolio.mountis.flick.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ProgressBar;
+import android.widget.ScrollView;
 
-import java.util.List;
+import java.util.Locale;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Optional;
+import comflick.myportfolio.mountis.flick.App;
 import comflick.myportfolio.mountis.flick.R;
-import comflick.myportfolio.mountis.flick.adapters.MovieAdapter;
+import comflick.myportfolio.mountis.flick.fragment.DetailFragment;
+import comflick.myportfolio.mountis.flick.fragment.GridFragment;
+import comflick.myportfolio.mountis.flick.fragment.SortingFragment;
 import comflick.myportfolio.mountis.flick.model.Movie;
-import comflick.myportfolio.mountis.flick.model.MovieListResults;
-import comflick.myportfolio.mountis.flick.network.MovieClient;
-import comflick.myportfolio.mountis.flick.util.MovieFilter;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import comflick.myportfolio.mountis.flick.network.FavoritesService;
+import comflick.myportfolio.mountis.flick.utils.OnItemSelectedListener;
+import comflick.myportfolio.mountis.flick.utils.SortHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
-    private GridView gridView;
-    private List<Movie> movies;
-    private ProgressBar progressBar;
-    private Subscription subscription;
-    private MovieAdapter movieAdapter;
+    private static final String SELECTED_MOVIE_KEY = "MovieSelected";
+    private static final String SELECTED_NAVIGATION_ITEM_KEY = "SelectedNavigationItem";
+
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @Nullable
+    @BindView(R.id.movie_detail_container)
+    ScrollView movieDetailContainer;
+    @Nullable
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
+    @Inject
+    SortHelper sortHelper;
+    @Inject
+    FavoritesService favoritesService;
+
+    private boolean twoPaneMode;
+    private Movie selectedMovie = null;
+    private int selectedNavigationItem;
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals( SortingFragment.BROADCAST_SORT_PREFERENCE_CHANGED )) {
+                hideMovieDetailContainer();
+                updateTitle();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind( this );
 
-//    Initialize GridView and progress Bar
-        gridView = findViewById(R.id.movie_posters_view);
-        progressBar = findViewById(R.id.progressBar);
+        ((App) getApplication()).getNetworkComponent().inject( this );
 
-//        Show movies retrieved from MovieDb
-        showMovies(MovieFilter.POPULAR);
-
-//        Setup onclicklistener for when a movie item is clicked to send us to the detail activity
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Movie selectedMovie = movies.get(position);
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra(getString(R.string.movie_intent_key), selectedMovie);
-                startActivity(intent);
-            }
-        });
-
-
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace( R.id.movies_grid_container, GridFragment.create() )
+                    .commit();
+        }
+        twoPaneMode = movieDetailContainer != null;
+        if (twoPaneMode && selectedMovie == null) {
+            movieDetailContainer.setVisibility( View.GONE );
+        }
+        setupToolbar();
+        setupFab();
     }
 
-    //    Inflate the settings menu to show on the Action Bar
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.settings, menu);
-        return true;
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter( SortingFragment.BROADCAST_SORT_PREFERENCE_CHANGED );
+        LocalBroadcastManager.getInstance( this ).registerReceiver( broadcastReceiver, intentFilter );
+        updateTitle();
     }
 
-    // Setup the sorting axctivity when we choose to view movies by popular or highest rated
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance( this ).unregisterReceiver( broadcastReceiver );
+    }
+
+    private void updateTitle() {
+        if (selectedNavigationItem == 0) {
+            String[] sortTitles = getResources().getStringArray( R.array.sorting_labels );
+            int currentSortIndex = sortHelper.getSortByPreference().ordinal();
+            String title = Character.toString( sortTitles[currentSortIndex].charAt( 0 ) ).toUpperCase( Locale.US ) +
+                    sortTitles[currentSortIndex].substring( 1 );
+            setTitle( title );
+        } else if (selectedNavigationItem == 1) {
+            setTitle( getResources().getString( R.string.favorites_title ) );
+        }
+    }
+
+    private void setupFab() {
+        if (fab != null) {
+            if (twoPaneMode && selectedMovie != null) {
+                if (favoritesService.isFavorite( selectedMovie )) {
+                    fab.setImageResource( R.drawable.ic_favorite_white );
+                } else {
+                    fab.setImageResource( R.drawable.ic_favorite_white_border );
+                }
+                fab.show();
+            } else {
+                fab.hide();
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState( outState );
+        outState.putParcelable( SELECTED_MOVIE_KEY, selectedMovie );
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState( savedInstanceState );
+        if (savedInstanceState != null) {
+            selectedMovie = savedInstanceState.getParcelable( SELECTED_MOVIE_KEY );
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sort_by_most_popular:
-                showMovies(MovieFilter.POPULAR);
-                return true;
-            case R.id.sort_by_highest_rated:
-                showMovies(MovieFilter.HIGH_RATED);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        int id = item.getItemId();
+
+        return super.onOptionsItemSelected( item );
     }
-
-    //    Populate the gridview with the movies retrieved
-    public void showMovies() {
-        movieAdapter = new MovieAdapter(this, movies);
-        gridView.setAdapter(movieAdapter);
-    }
-
-    private void showMovies(@MovieFilter.movieFilter int filter) {
-        progressBar.setVisibility(View.VISIBLE);
-        subscription = MovieClient.getInstance()
-                .getMovies(filter)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<MovieListResults>() {
-                    @Override
-                    public void onCompleted() {
-                        progressBar.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        progressBar.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onNext(MovieListResults movieListResults) {
-                        movies = movieListResults.getMovies();
-                        showMovies();
-                    }
-                });
-    }
-
 
     @Override
-    protected void onDestroy() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+    public void onItemSelected(Movie movie) {
+        if (twoPaneMode && movieDetailContainer != null) {
+            movieDetailContainer.setVisibility( View.VISIBLE );
+            selectedMovie = movie;
+            getSupportFragmentManager().beginTransaction()
+                    .replace( R.id.movie_detail_container, DetailFragment.create( movie ) )
+                    .commit();
+            setupFab();
+        } else {
+            DetailActivity.start( this, movie );
         }
-        super.onDestroy();
-
-
     }
-}
 
+    @Optional
+    @OnClick(R.id.fab)
+    void onFabClicked() {
+        if (favoritesService.isFavorite( selectedMovie )) {
+            favoritesService.removeFromFavorites( selectedMovie );
+            showSnackbar( R.string.notification_removed_from_favorites );
+            if (selectedNavigationItem == 1) {
+                hideMovieDetailContainer();
+            }
+        } else {
+            favoritesService.addToFavorites( selectedMovie );
+            showSnackbar( R.string.notification_added_to_favorites );
+        }
+        setupFab();
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar.make( coordinatorLayout, message, Snackbar.LENGTH_LONG ).show();
+    }
+
+    private void showSnackbar(@StringRes int messageResourceId) {
+        showSnackbar( getString( messageResourceId ) );
+    }
+
+    private void hideMovieDetailContainer() {
+        selectedMovie = null;
+        setupFab();
+        if (twoPaneMode && movieDetailContainer != null) {
+            movieDetailContainer.setVisibility( View.GONE );
+        }
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar( toolbar );
+    }
+
+}
