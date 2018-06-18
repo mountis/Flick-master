@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="sorting_labels">
+        <item>@string/sort_most_popular</item>
+        <item>@string/sort_highest_rated</item>
+        <item>@string/sort_favorite</item>
+    </string-array>
+
+</resources>

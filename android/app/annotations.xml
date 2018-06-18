@@ -1,0 +1,5 @@
+<root>
+    <item name='android.app.Activity android.app.Application getApplication()'>
+        <annotation name='android.support.annotation.NonNull' />
+    </item>
+</root>
