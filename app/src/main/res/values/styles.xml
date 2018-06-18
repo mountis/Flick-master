@@ -1,10 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><!--suppress ALL, AndroidDomInspection -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="MovieView" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@android:color/holo_purple</item>
-        <item name="colorPrimaryDark">@color/primary_material_dark_1</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorAccent" tools:ignore="PrivateResource">@color/accent_material_light</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/gray_background</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent" tools:ignore="PrivateResource">@color/accent_material_light</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
 </resources>

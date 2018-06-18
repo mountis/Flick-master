@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <color name="white">#ffffff</color>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="primary_material_dark" tools:override="true">#9c27b0</color>
+    <color name="primary_dark_material_dark" tools:override="true">#8d23aa</color>
+    <color name="accent_material_light" tools:override="true">#ffd600</color>
     <color name="black">#000000</color>
-    <color name="grey">#4c4c4c</color>
-    <color name="light_grey">#d0d0d0</color>
-    <color name="colorPrimaryDark">#6f099a</color>
-    <color name="colorPrimary">#9c27b0</color>
-    <color name="colorAccent">#ffc400</color>
-    <color name="primary_material_dark_1">#9c27b0</color>
-    <color name="primary_dark_material_dark">#651189</color>
-    <color name="accent_material_light">#faa701</color>
+    <color name="white">#ffffff</color>
+    <color name="gray_background">#eeeeee</color>
+
+    <color name="vote_perfect">#1b5e20</color>
+    <color name="vote_good">#4caf50</color>
+    <color name="vote_normal">#757575</color>
+    <color name="vote_bad">#f44336</color>
 </resources>

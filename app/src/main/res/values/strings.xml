@@ -1,16 +1,31 @@
 <resources>
     <string name="app_name">Flick</string>
-    <string name="movie_intent_key">movie</string>
-    <string name="movie_poster_data_key">movies.key</string>
-    <string name="base_url">http://api.themoviedb.org/3/</string>
-    <string name="api_key">You can get an API key at https://www.themoviedb.org</string>
-    <string name="movie_image_base_url">http://image.tmdb.org/t/p/w185/</string>
-    <string name="sort_by_most_popular">Popular movies</string>
-    <string name="sort_by_highest_rated">Top-Rated movies</string>
-    <string name="overview_data_key">overview.key</string>
 
+    <string name="action_sort">Sort by…</string>
+    <string name="action_cancel">Cancel</string>
 
-    <string name="user_rating">Movie Rating:</string>
-    <string name="plot_synopsis">Description:</string>
-    <string name="movie_release_date">Release Date:</string>
+    <string name="empty_grid_layout">No movies</string>
+
+    <string name="favorites_title">Favorites</string>
+
+    <string name="release_date">Release date: %s</string>
+    <string name="overview_title">Overview</string>
+    <string name="trailers_title">Trailers</string>
+    <string name="reviews_title">Reviews</string>
+
+    <string name="sort_title">Sort by</string>
+    <string name="sort_most_popular">most popular</string>
+    <string name="sort_highest_rated">highest rated</string>
+    <string name="sort_favorite">favorite</string>
+
+    <string name="notification_added_to_favorites">Added to favorites</string>
+    <string name="notification_removed_from_favorites">Removed from favorites</string>
+
+    <string name="movie_update_failure">Failed to update movies</string>
+
+    <string name="poster_description">Poster image</string>
+    <string name="backdrop_description">Backdrop image</string>
+    <string name="trailer_description">Trailer thumbnail</string>
+    <string name="empty_movies_icon_description">No movies icon</string>
+
 </resources>

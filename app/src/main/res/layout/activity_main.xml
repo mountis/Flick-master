@@ -1,26 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_activity_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/movie_posters_view"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="120dp"
-        android:gravity="center"
-        android:horizontalSpacing="4dp"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="4dp">
+        android:layout_height="wrap_content">
 
-    </GridView>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:fitsSystemWindows="true"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_gravity="center" />
+    </android.support.design.widget.AppBarLayout>
 
-</FrameLayout>
+    <include layout="@layout/activity_main_content" />
+
+</RelativeLayout>
