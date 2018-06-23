@@ -17,10 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
@@ -47,9 +45,6 @@ import rx.schedulers.Schedulers;
 
 public class DetailFragment extends RxFragment {
 
-    private static final String POSTER_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
-    private static final String POSTER_IMAGE_SIZE = "w780";
-
     private static final String ARG_MOVIE = "ArgMovie";
     private static final String TRAILERS_KEY = "Trailers";
     private static final String REVIEWS_KEY = "Reviews";
@@ -59,8 +54,6 @@ public class DetailFragment extends RxFragment {
     private static final double VOTE_GOOD = 7.0;
     private static final double VOTE_NORMAL = 5.0;
 
-    @BindView(R.id.image_movie_detail_poster)
-    ImageView movieImagePoster;
     @BindView(R.id.text_movie_original_title)
     TextView movieOriginalTitle;
     @BindView(R.id.text_movie_user_rating)
@@ -237,11 +230,6 @@ public class DetailFragment extends RxFragment {
     }
 
     private void initViews() {
-        Picasso.with( getContext().getApplicationContext() )
-                .load( POSTER_IMAGE_BASE_URL + POSTER_IMAGE_SIZE + movie.getPosterPath() )
-                .fit()
-                .centerInside()
-                .into( movieImagePoster );
         movieOriginalTitle.setText( movie.getOriginalTitle() );
         movieUserRating.setText( String.format( Locale.US, "%.1f", movie.getAverageVote() ) );
         movieUserRating.setTextColor( getRatingColor( movie.getAverageVote() ) );
